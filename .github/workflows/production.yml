@@ -2,8 +2,7 @@ name: Production
 
 on:
   push:
-    branches:
-      - '**'
+    branches: [main]
 
 env:
   AWS_REGION: ap-southeast-2
