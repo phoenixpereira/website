@@ -13,7 +13,7 @@ jobs:
   build:
     needs: lint-format
     name: Build
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     environment: Production
     permissions:
       id-token: write
@@ -37,5 +37,5 @@ jobs:
             --secret id=REDIS_URI \
             --secret id=NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY \
             --secret id=NEXT_PUBLIC_DRIVE_LINK \
-            --platform linux/amd64,linux/arm64 --file=Dockerfile -t csclub-website .
+            --platform=linux/arm64 --file=Dockerfile -t csclub-website .
           docker image save csclub-website | gzip > csclub-website.tar.gz
