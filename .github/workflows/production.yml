@@ -22,6 +22,16 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Install Docker
+        run: |
+          brew update
+          brew install --cask docker
+        if: runner.os == 'macOS'
+
+      - name: Start Docker service
+        run: open /Applications/Docker.app --args --unattended
+        if: runner.os == 'macOS'
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
         with:
@@ -41,3 +51,9 @@ jobs:
             --secret id=NEXT_PUBLIC_DRIVE_LINK \
             --platform=linux/arm64 --file=Dockerfile -t csclub-website .
           docker image save csclub-website | gzip > csclub-website.tar.gz
+
+      - name: Upload Docker image
+        uses: actions/upload-artifact@v3
+        with:
+          name: csclub-website-image
+          path: csclub-website.tar.gz
