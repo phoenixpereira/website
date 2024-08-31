@@ -13,7 +13,7 @@ jobs:
   build:
     needs: lint-format
     name: Build
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     environment: Production
     permissions:
       id-token: write
@@ -25,7 +25,7 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
         with:
-          driver: docker-container
+          version: latest
 
       - name: Build Docker container
         env:
@@ -39,5 +39,5 @@ jobs:
             --secret id=REDIS_URI \
             --secret id=NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY \
             --secret id=NEXT_PUBLIC_DRIVE_LINK \
-            --platform=linux/amd64,linux/arm64 --file=Dockerfile -t csclub-website .
+            --platform=linux/arm64 --file=Dockerfile -t csclub-website .
           docker image save csclub-website | gzip > csclub-website.tar.gz
