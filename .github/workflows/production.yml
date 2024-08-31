@@ -12,25 +12,32 @@ jobs:
 
   build:
     needs: lint-format
-    name: Build
-    runs-on: macos-latest
+    name: Build and Push Docker Image
+    runs-on: ubuntu-latest
     environment: Production
     permissions:
       id-token: write
       contents: read
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install Docker
-        run: |
-          brew update
-          brew install --cask docker
-        if: runner.os == 'macOS'
+      - name: Set up QEMU for ARM64
+        uses: docker/setup-qemu-action@v3
+        with:
+          platforms: arm64
 
-      - name: Start Docker service
-        run: open /Applications/Docker.app --args --unattended
-        if: runner.os == 'macOS'
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Cache Docker layers
+        uses: actions/cache@v4
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
 
       - name: Build Docker container
         env:
@@ -40,15 +47,18 @@ jobs:
           NEXT_PUBLIC_DRIVE_LINK: ${{ secrets.NEXT_PUBLIC_DRIVE_LINK }}
         run: |
           docker buildx build \
+            --platform linux/arm64 \
+            --tag csclub-website:latest \
+            --cache-from=type=local,src=/tmp/.buildx-cache \
+            --cache-to=type=local,dest=/tmp/.buildx-cache-new,mode=max \
             --secret id=DATABASE_URL \
             --secret id=REDIS_URI \
             --secret id=NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY \
             --secret id=NEXT_PUBLIC_DRIVE_LINK \
-            --platform=linux/arm64 --file=Dockerfile -t csclub-website .
+            --file=Dockerfile -t csclub-website .
           docker image save csclub-website | gzip > csclub-website.tar.gz
 
-      - name: Upload Docker image
-        uses: actions/upload-artifact@v3
-        with:
-          name: csclub-website-image
-          path: csclub-website.tar.gz
+      - name: Save Docker cache
+        if: success()
+        run: |
+          mv /tmp/.buildx-cache-new /tmp/.buildx-cache
