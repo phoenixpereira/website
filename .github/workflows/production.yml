@@ -2,7 +2,8 @@ name: Build and Artifact Upload
 
 on:
   push:
-    branches: ['*']
+    branches:
+      - '**'
 
 jobs:
   lint-format:
