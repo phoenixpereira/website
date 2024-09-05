@@ -54,8 +54,10 @@ jobs:
             --secret id=REDIS_URI \
             --secret id=NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY \
             --secret id=NEXT_PUBLIC_DRIVE_LINK \
-            --file=Dockerfile -t csclub-website .
-          docker image save csclub-website | gzip > csclub-website.tar.gz
+            --file=Dockerfile \
+            --tag csclub-website:latest \
+            --output type=tar,dest=csclub-website.tar.gz \
+            .
 
       - name: Save Docker cache
         if: success()
