@@ -54,8 +54,8 @@ jobs:
             --secret id=NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY \
             --secret id=NEXT_PUBLIC_DRIVE_LINK \
             --platform=linux/arm64 --file=Dockerfile -t csclub-website .
-            --load
-          docker save csclub-website | gzip > csclub-website.tar.gz
+            --output type=tar,dest=csclub-website.tar.gz \
+          gzip csclub-website.tar.gz
 
       - name: Save Docker cache
         if: success()
