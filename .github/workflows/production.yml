@@ -56,7 +56,7 @@ jobs:
             --secret id=NEXT_PUBLIC_DRIVE_LINK \
             --file=Dockerfile \
             --tag csclub-website:latest \
-            --output type=tar,dest=csclub-website.tar.gz \
+            --output type=docker,name=csclub-website:latest | gzip > csclub-website.tar.gz
             .
 
       - name: Save Docker cache
