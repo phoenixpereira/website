@@ -1,11 +1,8 @@
-name: Production
+name: Build and Artifact Upload
 
 on:
   push:
-    branches: [main]
-
-env:
-  AWS_REGION: ap-southeast-2
+    branches: ['*']
 
 jobs:
   lint-format:
@@ -23,13 +20,6 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: ${{ secrets.AWS_ROLE_TO_ASSUME }}
-          role-session-name: ${{ secrets.AWS_ROLE_SESSION_NAME }}
-          aws-region: ${{ env.AWS_REGION }}
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -57,7 +47,6 @@ jobs:
         run: |
           docker buildx build \
             --platform linux/arm64 \
-            --tag csclub-website:latest \
             --cache-from=type=local,src=/tmp/.buildx-cache \
             --cache-to=type=local,dest=/tmp/.buildx-cache-new,mode=max \
             --secret id=DATABASE_URL \
@@ -65,36 +54,15 @@ jobs:
             --secret id=NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY \
             --secret id=NEXT_PUBLIC_DRIVE_LINK \
             --file=Dockerfile -t csclub-website .
-            docker image save csclub-website | gzip > csclub-website.tar.gz
+          docker image save csclub-website | gzip > csclub-website.tar.gz
 
       - name: Save Docker cache
         if: success()
         run: |
           rsync -a --delete /tmp/.buildx-cache-new/ /tmp/.buildx-cache/
 
-      - name: Copy image and compose file to S3
-        run: |
-          aws s3 cp ./csclub-website.tar.gz s3://${{ secrets.AWS_S3_BUCKET }}/website/
-          aws s3 cp ./docker-compose.yml s3://${{ secrets.AWS_S3_BUCKET }}/website/
-
-  deploy:
-    needs: build
-    name: Deploy
-    runs-on: ubuntu-latest
-    environment: Production
-    steps:
-      - name: Deploy on EC2
-        env:
-          KEY: ${{ secrets.SSH_EC2_KEY }}
-          HOSTNAME: ${{ secrets.SSH_EC2_HOSTNAME }}
-          USER: ${{ secrets.SSH_EC2_USER }}
-        run: |
-          echo "$KEY" > private_key && chmod 600 private_key
-          ssh -v -o StrictHostKeyChecking=no -i private_key ${USER}@${HOSTNAME} '
-            cd ~/website
-            aws s3 cp s3://${{ secrets.AWS_S3_BUCKET }}/website/csclub-website.tar.gz .
-            aws s3 cp s3://${{ secrets.AWS_S3_BUCKET }}/website/docker-compose.yml .
-            docker load -i csclub-website.tar.gz
-            docker compose up -d
-            docker restart csclub-website
-          '
+      - name: Upload Docker image as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: csclub-website-image
+          path: csclub-website.tar.gz
