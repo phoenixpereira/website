@@ -1,3 +1,4 @@
+import { UserScope, LogtoNextConfig } from '@logto/next';
 import { createEnv } from '@t3-oss/env-nextjs';
 import { z } from 'zod';
 
@@ -19,7 +20,8 @@ export const env = createEnv({
     },
 });
 
-export const logtoConfig = {
+export const logtoConfig: LogtoNextConfig = {
+    scopes: [UserScope.Email],
     endpoint: env.LOGTO_ENDPOINT || '',
     appId: env.LOGTO_APP_ID || '',
     appSecret: env.LOGTO_APP_SECRET || '',
