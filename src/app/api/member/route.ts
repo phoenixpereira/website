@@ -7,7 +7,7 @@ import { z } from 'zod';
 export async function POST(request: Request) {
     const req = await request.json();
     const schema = createInsertSchema(memberTable, {
-        clerkId: z.undefined(),
+        logtoID: z.undefined(),
         email: z.undefined(),
     });
 
@@ -22,7 +22,7 @@ export async function POST(request: Request) {
     }
 
     await db.insert(memberTable).values({
-        clerkId: user.id,
+        logtoID: user.id,
         email: user.emailAddresses[0].emailAddress,
         ...reqBody.data,
     });

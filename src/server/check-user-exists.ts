@@ -7,6 +7,6 @@ export const checkUserExists = cache(async (clerkUserId: string) => {
     const existingUser = await db
         .select({ count: memberTable.id })
         .from(memberTable)
-        .where(eq(memberTable.clerkId, clerkUserId));
+        .where(eq(memberTable.logtoID, clerkUserId));
     return existingUser.length > 0;
 });
