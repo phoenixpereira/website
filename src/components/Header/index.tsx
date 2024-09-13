@@ -21,16 +21,19 @@ const getHeaderData = async () => {
         return { isSignedIn: false as const };
     }
 
-    // let nextStep: 'signup' | 'payment' | null = null;
-    // const exists = await checkUserExists(claims?.sub ?? '');
-    // if (exists) {
-    //     const membershipPayment = await verifyMembershipPayment(claims?.sub ?? '');
-    //     if (!membershipPayment.paid) {
-    //         nextStep = 'payment';
-    //     }
-    // } else {
-    //     nextStep = 'signup';
-    // }
+    let nextStep: 'signup' | 'payment' | null = null;
+    const exists = await checkUserExists(claims?.sub ?? '');
+    if (exists) {
+        console.log('User exists');
+        const membershipPayment = await verifyMembershipPayment(claims?.sub ?? '');
+        if (!membershipPayment.paid) {
+            console.log('User has not paid');
+            nextStep = 'payment';
+        }
+    } else {
+        console.log('User does not exist');
+        nextStep = 'signup';
+    }
 
     // Generate avatar URL
     const avatar = email ? getGravatarUrl(email) : '';
@@ -39,8 +42,8 @@ const getHeaderData = async () => {
         isSignedIn: true as const,
         avatar: avatar,
         // isAdmin: (user.publicMetadata.isAdmin as boolean | undefined) ?? false,
-        // nextStep,
-        // isMember: nextStep === null,
+        nextStep,
+        isMember: nextStep === null,
     };
 };
 export type HeaderData = Awaited<ReturnType<typeof getHeaderData>>;
