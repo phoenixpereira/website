@@ -23,6 +23,9 @@ importers:
       '@libsql/client':
         specifier: 0.4.0-pre.7
         version: 0.4.0-pre.7
+      '@logto/next':
+        specifier: ^3.6.0
+        version: 3.6.0(next@14.2.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
       '@t3-oss/env-nextjs':
         specifier: ^0.7.3
         version: 0.7.3(typescript@5.4.5)(zod@3.23.8)
@@ -318,6 +321,10 @@ packages:
   '@colors/colors@1.5.0':
     resolution: {integrity: sha512-ooWCrlZP11i8GImSjTHYHLkvFDP48nS4+204nGb1RiX/WXYHmJA2III9/e2DWVabCESdW7hBAEzHRqUn9OUVvQ==}
     engines: {node: '>=0.1.90'}
+
+  '@edge-runtime/cookies@4.1.1':
+    resolution: {integrity: sha512-ATZLTOpnCUD9ZLNBIXhxOmP/UVx6BfhCjDy9P1YACpD8vrHb5Uw7YlG9RYUl1AMF7Y10TIIN3jhFbUSMiH2J7g==}
+    engines: {node: '>=16'}
 
   '@emnapi/runtime@1.2.0':
     resolution: {integrity: sha512-bV21/9LQmcQeCPEg3BDFtvwL6cwiTMksYNWQQ4KOxCZikEGalWtenoZ0wCiukJINlGCIi2KXx01g4FoH/LxpzQ==}
@@ -833,6 +840,20 @@ packages:
     cpu: [x64]
     os: [win32]
 
+  '@logto/client@2.8.0':
+    resolution: {integrity: sha512-FU3WtR/WcsKOb0REdBQcbrKh3EmTYpkhI2YilXY8ipEGe7+iI2oPq4YB7TWTTNtIvN1GFzqPbAPIm+3KtTtuBQ==}
+
+  '@logto/js@4.2.0':
+    resolution: {integrity: sha512-kse29kNKuM/tw30YcOf2eOQuFBlGPZTr4rKI/LpdTKhk0fLGM5ZJKPQWNPiPFZdBfTldERXVNtd17/bZLWc/OQ==}
+
+  '@logto/next@3.6.0':
+    resolution: {integrity: sha512-wj855oJRYjbXslCv++jschT9by3tUp6boIHdb+nLCpxh17aiM5ZJNPG5JUAl/9kfU3v1YWrhHSrixPSJsNbFCw==}
+    peerDependencies:
+      next: '>=12'
+
+  '@logto/node@2.5.6':
+    resolution: {integrity: sha512-sD6DlZPP+6E5PV+6/QbwrDA4QGzZPGMAEnXgr1Zx4cOyGAl+/nipekx98+mVpEEOVyIZHNkta6ghi/u/3pZNPQ==}
+
   '@neon-rs/load@0.0.4':
     resolution: {integrity: sha512-kTPhdZyTQxB+2wpiRcFWrDcejc4JI6tkPuS7UZCG4l6Zvc5kU/gGQ/ozvHTh1XR5tS+UlfAfGuPajjzQjCiHCw==}
 
@@ -991,6 +1012,10 @@ packages:
 
   '@rushstack/eslint-patch@1.10.3':
     resolution: {integrity: sha512-qC/xYId4NMebE6w/V33Fh9gWxLgURiNYgVNObbJl2LZv0GUUItCcCqC5axQSwRaAgaxl2mELq1rMzlswaQ0Zxg==}
+
+  '@silverhand/essentials@2.9.1':
+    resolution: {integrity: sha512-rsql/ZxXMqVvt7ySDHd7xjCog4oCYg+dexxlj3veolajwjKiy/08ZtFyEtFjSEAaKbXwkWZ4TDtiNSxb7HS0yA==}
+    engines: {node: ^18.12.0 || ^20.9.0, pnpm: ^9.0.0}
 
   '@socket.io/component-emitter@3.1.2':
     resolution: {integrity: sha512-9BCxFwvbGg/RsZK9tjXd8s4UcwR0MWeFQ1XEKIQVVvAGJyINdrqKMcTRyLoK8Rse1GjzLV9cwjWV1olXRWEXVA==}
@@ -1384,9 +1409,17 @@ packages:
     resolution: {integrity: sha512-YrwaA0vEKazPBkn0ipTiMpSajYDSe+KjQfrjhcBMxJt/znbvlHd8Pw/Vamaz5EB4Wfhs3SUR3Z9mwRu/P3s3Yg==}
     engines: {node: '>=8'}
 
+  camelcase-keys@7.0.2:
+    resolution: {integrity: sha512-Rjs1H+A9R+Ig+4E/9oyB66UC5Mj9Xq3N//vcLf2WzgdTi/3gUu3Z9KoqmlrEG4VuuLK8wJHofxzdQXz/knhiYg==}
+    engines: {node: '>=12'}
+
   camelcase@5.3.1:
     resolution: {integrity: sha512-L28STB170nwWS63UjtlEOE3dldQApaJXZkOI1uMFfzf3rRuPegHaHesyee+YxQ+W6SvRDQV6UrdOdRiR153wJg==}
     engines: {node: '>=6'}
+
+  camelcase@6.3.0:
+    resolution: {integrity: sha512-Gmy6FhYlCY7uOElZUSbxo2UCDH8owEk996gkbrpsgGtrJLM3J7jGxl9Ic7Qwwj4ivOE5AWZWRMecDdF7hqGjFA==}
+    engines: {node: '>=10'}
 
   camelcase@7.0.1:
     resolution: {integrity: sha512-xlx1yCK2Oc1APsPXDL2LdlNP6+uu8OCDdhOBSVT279M/S+y75O30C2VuD8T2ogdePBBl7PfPF4504tnLgX3zfw==}
@@ -2432,6 +2465,9 @@ packages:
     resolution: {integrity: sha512-2yTgeWTWzMWkHu6Jp9NKgePDaYHbntiwvYuuJLbbN9vl7DC9DvXKOB2BC3ZZ92D3cvV/aflH0osDfwpHepQ53w==}
     hasBin: true
 
+  jose@5.8.0:
+    resolution: {integrity: sha512-E7CqYpL/t7MMnfGnK/eg416OsFCVUrU/Y3Vwe7QjKhu/BkS1Ms455+2xsqZQVN57/U2MHMBvEb5SrmAZWAIntA==}
+
   js-base64@3.7.7:
     resolution: {integrity: sha512-7rCnleh0z2CkXhH67J8K1Ytz0b2Y+yxTPL+/KOJoa20hfnVQ/3/T6W/KflYI4bRHRagNeXeU2bkNGI3v1oS/lw==}
 
@@ -3118,6 +3154,10 @@ packages:
     resolution: {integrity: sha512-ARhCpm70fzdcvNQfPoy49IaanKkTlRWF2JMzqhcJbhSFRZv7nPTvZJdcY7301IPmvW+/p0RgIWnQDLJxifsQ7g==}
     engines: {node: '>=8'}
 
+  quick-lru@5.1.1:
+    resolution: {integrity: sha512-WuyALRjWPDGtt/wzJiadO5AXY+8hZ80hVpe6MyivgraREW751X3SbhRvG3eLKOYN+8VEvqLcf3wdnt44Z4S4SA==}
+    engines: {node: '>=10'}
+
   range-parser@1.2.1:
     resolution: {integrity: sha512-Hrgsx+orqoygnmhFbKaHE6c296J+HTAQXoxEF6gNupROmmGJRoyzfG3ccAveqCBrwr/2yxQ5BVd/GTl5agOwSg==}
     engines: {node: '>= 0.6'}
@@ -3549,6 +3589,10 @@ packages:
 
   type-fest@0.20.2:
     resolution: {integrity: sha512-Ne+eE4r0/iWnpAxD852z3A+N0Bt5RN//NjJwRd2VFHEmrywxf5vsZlh4R6lixl6B+wz/8d+maTSAkN1FIkI3LQ==}
+    engines: {node: '>=10'}
+
+  type-fest@1.4.0:
+    resolution: {integrity: sha512-yGSza74xk0UG8k+pLh5oeoYirvIiWo5t0/o3zHHAO2tRDiZcxWP7fywNlXhqb6/r6sWvwi+RsyQMWhVLe4BVuA==}
     engines: {node: '>=10'}
 
   type-fest@2.19.0:
@@ -4018,6 +4062,8 @@ snapshots:
 
   '@colors/colors@1.5.0': {}
 
+  '@edge-runtime/cookies@4.1.1': {}
+
   '@emnapi/runtime@1.2.0':
     dependencies:
       tslib: 2.6.3
@@ -4379,6 +4425,30 @@ snapshots:
   '@libsql/win32-x64-msvc@0.2.0':
     optional: true
 
+  '@logto/client@2.8.0':
+    dependencies:
+      '@logto/js': 4.2.0
+      '@silverhand/essentials': 2.9.1
+      camelcase-keys: 7.0.2
+      jose: 5.8.0
+
+  '@logto/js@4.2.0':
+    dependencies:
+      '@silverhand/essentials': 2.9.1
+      camelcase-keys: 7.0.2
+
+  '@logto/next@3.6.0(next@14.2.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1))':
+    dependencies:
+      '@edge-runtime/cookies': 4.1.1
+      '@logto/node': 2.5.6
+      next: 14.2.3(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+
+  '@logto/node@2.5.6':
+    dependencies:
+      '@logto/client': 2.8.0
+      '@silverhand/essentials': 2.9.1
+      js-base64: 3.7.7
+
   '@neon-rs/load@0.0.4': {}
 
   '@next/env@14.2.3': {}
@@ -4501,6 +4571,8 @@ snapshots:
       '@redis/client': 1.5.16
 
   '@rushstack/eslint-patch@1.10.3': {}
+
+  '@silverhand/essentials@2.9.1': {}
 
   '@socket.io/component-emitter@3.1.2': {}
 
@@ -4976,7 +5048,16 @@ snapshots:
       map-obj: 4.3.0
       quick-lru: 4.0.1
 
+  camelcase-keys@7.0.2:
+    dependencies:
+      camelcase: 6.3.0
+      map-obj: 4.3.0
+      quick-lru: 5.1.1
+      type-fest: 1.4.0
+
   camelcase@5.3.1: {}
+
+  camelcase@6.3.0: {}
 
   camelcase@7.0.1: {}
 
@@ -6161,6 +6242,8 @@ snapshots:
 
   jiti@1.21.6: {}
 
+  jose@5.8.0: {}
+
   js-base64@3.7.7: {}
 
   js-cookie@3.0.1: {}
@@ -6898,6 +6981,8 @@ snapshots:
 
   quick-lru@4.0.1: {}
 
+  quick-lru@5.1.1: {}
+
   range-parser@1.2.1: {}
 
   raw-body@2.5.2:
@@ -7411,6 +7496,8 @@ snapshots:
       prelude-ls: 1.2.1
 
   type-fest@0.20.2: {}
+
+  type-fest@1.4.0: {}
 
   type-fest@2.19.0: {}
 
