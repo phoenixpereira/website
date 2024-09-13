@@ -1,9 +1,10 @@
 'use client';
 
-import { useClerk } from '@clerk/clerk-react';
+// import { useClerk } from '@clerk/clerk-react';
+import { handleSignOut } from '@/server/logto-actions';
 import { Transition } from '@headlessui/react';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
+// import { useRouter } from 'next/navigation';
 import { useRef, useState } from 'react';
 import { useOnClickOutside } from 'usehooks-ts';
 import type { HeaderData } from '.';
@@ -25,13 +26,13 @@ function UserButton({ data }: { data: HeaderData }) {
         setMenuOpen(!isMenuOpen);
     };
 
-    const { signOut } = useClerk();
-    const router = useRouter();
-    const handleSignOut = async () => {
-        await signOut();
-        router.push('/');
-        router.refresh();
-    };
+    // const { signOut } = useClerk();
+    // const router = useRouter();
+    // const handleSignOut = async () => {
+    //     await signOut();
+    //     router.push('/');
+    //     router.refresh();
+    // };
 
     const userExists = data.nextStep !== 'signup';
     return (
@@ -51,7 +52,13 @@ function UserButton({ data }: { data: HeaderData }) {
                 >
                     <div className="absolute right-0 top-10 z-50 w-44 space-y-4 border-4 border-black bg-white p-4">
                         {userExists && <MenuLinks data={data} onClick={closeMenu} />}
-                        <Button onClick={handleSignOut} colour="orange" width="w-40 md:w-32">
+                        <Button
+                            onClick={async () => {
+                                await handleSignOut();
+                            }}
+                            colour="orange"
+                            width="w-40 md:w-32"
+                        >
                             Sign Out
                         </Button>
                     </div>
