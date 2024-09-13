@@ -1,4 +1,3 @@
-import { handleSignIn, handleSignOut } from '@';
 import { logtoConfig } from '@/app/logto';
 import { checkUserExists } from '@/server/check-user-exists';
 import { verifyMembershipPayment } from '@/server/verify-membership-payment';

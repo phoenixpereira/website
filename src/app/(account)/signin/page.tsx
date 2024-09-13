@@ -1,40 +1,29 @@
 import { logtoConfig } from '@/app/logto';
-import { getLogtoContext, signIn, signOut } from '@logto/next/server-actions';
+import { getLogtoContext, signIn } from '@logto/next/server-actions';
 import type { Metadata } from 'next';
+import { redirect } from 'next/navigation';
 import SignIn from './SignIn';
-import SignOut from './SignOut';
 
 export const metadata: Metadata = {
     title: 'Sign In',
 };
 
 const Home = async () => {
-    const { isAuthenticated, claims } = await getLogtoContext(logtoConfig);
+    const { isAuthenticated } = await getLogtoContext(logtoConfig);
+
+    if (isAuthenticated) {
+        redirect('/');
+        return null;
+    }
 
     return (
-        <nav className="mt-64">
-            {isAuthenticated ? (
-                <p>
-                    Hello, {claims?.sub},
-                    <SignOut
-                        onSignOut={async () => {
-                            'use server';
-
-                            await signOut(logtoConfig);
-                        }}
-                    />
-                </p>
-            ) : (
-                <p>
-                    <SignIn
-                        onSignIn={async () => {
-                            'use server';
-
-                            await signIn(logtoConfig);
-                        }}
-                    />
-                </p>
-            )}
+        <nav className="mt-24">
+            <SignIn
+                onSignIn={async () => {
+                    'use server';
+                    await signIn(logtoConfig);
+                }}
+            />
         </nav>
     );
 };
