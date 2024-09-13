@@ -1,7 +1,12 @@
 import { logtoConfig } from '@/app/logto';
 import { getLogtoContext, signIn, signOut } from '@logto/next/server-actions';
+import type { Metadata } from 'next';
 import SignIn from './SignIn';
 import SignOut from './SignOut';
+
+export const metadata: Metadata = {
+    title: 'Sign In',
+};
 
 const Home = async () => {
     const { isAuthenticated, claims } = await getLogtoContext(logtoConfig);
