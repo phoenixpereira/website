@@ -1,8 +1,8 @@
 import Button from '@/components/Button';
 import { fetcher } from '@/lib/fetcher';
 import { formatDate } from '@/utils/format-date';
-import { useUser } from '@clerk/clerk-react';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 import type { PaymentLink } from 'square';
 import useSWRMutation from 'swr/mutation';
 import type { SettingTabProps } from '../Settings';
@@ -10,7 +10,16 @@ import type { SettingTabProps } from '../Settings';
 export default function MembershipSettings({
     settingData: { membershipPayment: payment },
 }: SettingTabProps) {
-    const { user } = useUser();
+    const [claimsSub, setClaimsSub] = useState<any>(null);
+
+    useEffect(() => {
+        async function fetchClaims() {
+            const response = await fetch('/api/logto');
+            const data = await response.text();
+            setClaimsSub(data);
+        }
+        fetchClaims();
+    }, []);
 
     const pay = useSWRMutation('payment', fetcher.post.mutate, {
         onSuccess: async (data: PaymentLink) => {
@@ -19,11 +28,13 @@ export default function MembershipSettings({
     });
 
     const handlePayment = async () => {
-        pay.trigger({
-            product: 'membership',
-            customerId: user!.id,
-            redirectUrl: window.location.href,
-        });
+        if (claimsSub) {
+            pay.trigger({
+                product: 'membership',
+                customerId: claimsSub,
+                redirectUrl: window.location.href,
+            });
+        }
     };
 
     return (

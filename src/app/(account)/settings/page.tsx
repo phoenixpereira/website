@@ -1,8 +1,10 @@
+import { logtoConfig } from '@/app/logto';
 import FancyRectangle from '@/components/FancyRectangle';
 import Title from '@/components/Title';
 import { checkUserExists } from '@/server/check-user-exists';
 import { verifyMembershipPayment } from '@/server/verify-membership-payment';
-import { currentUser } from '@clerk/nextjs';
+import { getLogtoContext } from '@logto/next/server-actions';
+// import { currentUser } from '@clerk/nextjs';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
@@ -14,11 +16,14 @@ export const metadata: Metadata = {
 };
 
 export default async function SettingsPage() {
-    const user = await currentUser();
-    if (!user) return notFound();
+    // const user = await currentUser();
 
-    const exists = await checkUserExists(user.id);
-    const membershipPayment = await verifyMembershipPayment(user.id);
+    const { isAuthenticated, claims } = await getLogtoContext(logtoConfig);
+
+    if (!isAuthenticated) return notFound();
+
+    const exists = await checkUserExists(claims.sub);
+    const membershipPayment = await verifyMembershipPayment(claims.sub);
 
     return (
         <main className="flex flex-col items-center gap-8 md:gap-16">
