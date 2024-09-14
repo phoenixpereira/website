@@ -1,3 +1,5 @@
+'use client';
+
 import Button from '@/components/Button';
 import ControlledField from '@/components/ControlledField';
 import { STUDENT_STATUSES } from '@/constants/student-info';
