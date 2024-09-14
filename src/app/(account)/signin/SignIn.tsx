@@ -27,7 +27,7 @@ export default function SignIn({ onSignIn }: Props) {
                                 onSignIn();
                             }}
                         >
-                            Sign In with Logto
+                            Sign in with Logto
                         </Button>
 
                         {/* Sign-up option */}

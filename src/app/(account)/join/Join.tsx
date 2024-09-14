@@ -1,8 +1,9 @@
 'use client';
 
+import Button from '@/components/Button';
 import FancyRectangle from '@/components/FancyRectangle';
 import Title from '@/components/Title';
-import { SignedIn, SignedOut, useUser } from '@clerk/nextjs';
+// import { SignedIn, SignedOut, useUser } from '@clerk/nextjs';
 import Link from 'next/link';
 import { useEffect } from 'react';
 import ProgressBar from './ProgressBar';
@@ -12,16 +13,20 @@ import StepThree from './steps/StepThree';
 import StepTwo from './steps/StepTwo';
 import { useJoinUsHeading, useJoinUsStep } from './store';
 
-export default function Join() {
-    const { step, setStep } = useJoinUsStep();
+type Props = {
+    onJoin: () => Promise<void>;
+};
+
+export default function Join({ onJoin }: Props) {
+    // const { step, setStep } = useJoinUsStep();
     const { heading } = useJoinUsHeading();
 
-    const { isSignedIn } = useUser();
-    useEffect(() => {
-        if (isSignedIn) {
-            setStep(2);
-        }
-    }, [isSignedIn]);
+    // const { isSignedIn } = useUser();
+    // useEffect(() => {
+    //     if (isSignedIn) {
+    //         setStep(2);
+    //     }
+    // }, [isSignedIn]);
 
     return (
         <main className="flex flex-col items-center gap-8 md:gap-16">
@@ -55,7 +60,19 @@ export default function Join() {
                         <h3 className="text-3xl font-bold">{heading.title}</h3>
                         <p className="mb-8 text-xl">{heading.description}</p>
 
-                        <SignedOut>
+                        <Button
+                            type="submit"
+                            colour="orange"
+                            width="w-full"
+                            size="small"
+                            onClick={() => {
+                                onJoin();
+                            }}
+                        >
+                            Sign up with Logto
+                        </Button>
+
+                        {/* <SignedOut>
                             <StepOne />
                         </SignedOut>
                         <SignedIn>
@@ -64,7 +81,7 @@ export default function Join() {
                                 // eslint-disable-next-line react/jsx-key
                                 [<StepTwo />, <StepThree />, <StepFour />][step - 2]
                             }
-                        </SignedIn>
+                        </SignedIn> */}
                     </div>
                 </FancyRectangle>
             </section>

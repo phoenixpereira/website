@@ -13,7 +13,6 @@ const Home = async () => {
 
     if (isAuthenticated) {
         redirect('/');
-        return null;
     }
 
     return (
