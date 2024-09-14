@@ -11,22 +11,14 @@ import StepFour from './steps/StepFour';
 import StepOne from './steps/StepOne';
 import StepThree from './steps/StepThree';
 import StepTwo from './steps/StepTwo';
-import { useJoinUsHeading, useJoinUsStep } from './store';
+import { useJoinUsHeading } from './store';
 
 type Props = {
     onJoin: () => Promise<void>;
 };
 
 export default function Join({ onJoin }: Props) {
-    // const { step, setStep } = useJoinUsStep();
     const { heading } = useJoinUsHeading();
-
-    // const { isSignedIn } = useUser();
-    // useEffect(() => {
-    //     if (isSignedIn) {
-    //         setStep(2);
-    //     }
-    // }, [isSignedIn]);
 
     return (
         <main className="flex flex-col items-center gap-8 md:gap-16">
@@ -72,16 +64,15 @@ export default function Join({ onJoin }: Props) {
                             Sign up with Logto
                         </Button>
 
-                        {/* <SignedOut>
-                            <StepOne />
-                        </SignedOut>
-                        <SignedIn>
-                            <ProgressBar step={step} />
-                            {
-                                // eslint-disable-next-line react/jsx-key
-                                [<StepTwo />, <StepThree />, <StepFour />][step - 2]
-                            }
-                        </SignedIn> */}
+                        {/* Sign-in option */}
+                        <div className="mt-10 flex">
+                            <p className="text-lg text-grey md:text-base">
+                                Already have an account?{' '}
+                                <Link href="/signin" className="text-orange">
+                                    Sign In
+                                </Link>
+                            </p>
+                        </div>
                     </div>
                 </FancyRectangle>
             </section>

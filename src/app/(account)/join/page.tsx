@@ -4,9 +4,8 @@ import Title from '@/components/Title';
 import { getLogtoContext, signIn } from '@logto/next/server-actions';
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { redirect } from 'next/navigation';
 import Join from './Join';
-import StepTwo from './steps/StepTwo';
+import JoinForm from './JoinForm';
 
 export const metadata: Metadata = {
     title: 'Join',
@@ -54,15 +53,10 @@ export default async function JoinPage() {
                     </p>
                 </div>
             </section>
-            <section className="w-full max-w-lg">
-                <FancyRectangle colour="purple" offset="8" filled fullWidth>
-                    <div className="z-0 w-full border-4 border-black bg-white p-8 text-black md:p-12">
-                        <h3 className="text-3xl font-bold">Create your account</h3>
-                        <p className="mb-8 text-xl"></p>
-                        <StepTwo />
-                    </div>
-                </FancyRectangle>
-            </section>
+
+            <FancyRectangle colour="purple" offset="8" filled fullWidth>
+                <JoinForm />
+            </FancyRectangle>
         </main>
     );
 }

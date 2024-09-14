@@ -11,7 +11,7 @@ type JoinUsStepState = {
     setStep: (step: number) => void;
 };
 export const useJoinUsStep = create<JoinUsStepState>((set) => ({
-    step: 1,
+    step: 2,
     nextStep: () => set((state) => ({ step: state.step + 1 })),
     prevStep: () => set((state) => ({ step: state.step - 1 })),
     setStep: (step) => set({ step }),

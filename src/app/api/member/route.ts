@@ -1,6 +1,8 @@
+// import { currentUser } from '@clerk/nextjs';
+import { logtoConfig } from '@/app/logto';
 import { db } from '@/db';
 import { memberTable } from '@/db/schema';
-import { currentUser } from '@clerk/nextjs';
+import { getLogtoContext } from '@logto/next/server-actions';
 import { createInsertSchema } from 'drizzle-zod';
 import { z } from 'zod';
 
@@ -11,8 +13,9 @@ export async function POST(request: Request) {
         email: z.undefined(),
     });
 
-    const user = await currentUser();
-    if (!user) {
+    const { isAuthenticated, claims } = await getLogtoContext(logtoConfig);
+
+    if (!isAuthenticated) {
         return new Response(null, { status: 401 });
     }
 
@@ -22,8 +25,8 @@ export async function POST(request: Request) {
     }
 
     await db.insert(memberTable).values({
-        logtoID: user.id,
-        email: user.emailAddresses[0].emailAddress,
+        logtoID: claims?.sub ?? '',
+        email: claims?.email ?? '',
         ...reqBody.data,
     });
     return Response.json({ success: true });
