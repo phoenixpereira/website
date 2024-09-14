@@ -1,9 +1,11 @@
 import { logtoConfig } from '@/app/logto';
 import FancyRectangle from '@/components/FancyRectangle';
 import Title from '@/components/Title';
+import { checkUserExists } from '@/server/check-user-exists';
 import { getLogtoContext, signIn } from '@logto/next/server-actions';
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 import Join from './Join';
 import JoinForm from './JoinForm';
 
@@ -12,7 +14,7 @@ export const metadata: Metadata = {
 };
 
 export default async function JoinPage() {
-    const { isAuthenticated } = await getLogtoContext(logtoConfig);
+    const { isAuthenticated, claims } = await getLogtoContext(logtoConfig);
 
     if (!isAuthenticated) {
         return (
@@ -25,6 +27,11 @@ export default async function JoinPage() {
                 />
             </nav>
         );
+    }
+
+    const userExists = await checkUserExists(claims?.sub ?? '');
+    if (userExists) {
+        redirect('/settings');
     }
 
     return (
