@@ -29,7 +29,7 @@ export const env = createEnv({
 
 // Server-side configuration
 export const logtoConfig: LogtoNextConfig = {
-    scopes: [UserScope.Email],
+    scopes: [UserScope.Email, UserScope.CustomData],
     endpoint: env.NEXT_PUBLIC_LOGTO_ENDPOINT || '',
     appId: env.NEXT_PUBLIC_LOGTO_APP_ID || '',
     appSecret: env.NEXT_PUBLIC_LOGTO_APP_SECRET || '',

@@ -1,7 +1,7 @@
 /**
  * Payment API route
  *
- * This route is protected, meaning only authenticated users can access this. Clerk is used to
+ * This route is protected, meaning only authenticated users can access this. Logto is used to
  * verify that the user is signed in (see `src/middleware.ts`)
  */
 import { logtoConfig } from '@/app/logto';
@@ -101,6 +101,11 @@ export async function PUT(request: Request) {
     // if (!user?.publicMetadata.isAdmin) {
     //     return new Response(null, { status: 401 });
     // }
+
+    const { userInfo } = await getLogtoContext(logtoConfig, { fetchUserInfo: true });
+    if (!userInfo?.custom_data?.isAdmin) {
+        return new Response(null, { status: 401 });
+    }
 
     const reqBody = schema.safeParse(req);
     if (!reqBody.success) {

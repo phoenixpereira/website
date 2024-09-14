@@ -1,8 +1,10 @@
+// import { currentUser } from '@clerk/nextjs';
+import { logtoConfig } from '@/app/logto';
 import FancyRectangle from '@/components/FancyRectangle';
 import Title from '@/components/Title';
 import { db } from '@/db';
 import { memberTable } from '@/db/schema';
-import { currentUser } from '@clerk/nextjs';
+import { getLogtoContext, signIn } from '@logto/next/server-actions';
 import { desc, count } from 'drizzle-orm';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
@@ -58,8 +60,9 @@ export type Member = {
 };
 
 export default async function AdminPage({ searchParams }: { searchParams?: { page?: string } }) {
-    const user = await currentUser();
-    if (!user?.publicMetadata.isAdmin) {
+    // const user = await currentUser();
+    const { userInfo } = await getLogtoContext(logtoConfig, { fetchUserInfo: true });
+    if (!userInfo?.custom_data?.isAdmin) {
         return notFound();
     }
 

@@ -15,7 +15,13 @@ const getGravatarUrl = (email: string) => {
 
 const getHeaderData = async () => {
     // const user = await currentUser();
-    const { claims: { email } = {}, claims, isAuthenticated } = await getLogtoContext(logtoConfig);
+    const {
+        userInfo,
+        claims: { email } = {},
+        claims,
+        isAuthenticated,
+    } = await getLogtoContext(logtoConfig, { fetchUserInfo: true });
+
     if (!isAuthenticated) {
         return { isSignedIn: false as const };
     }
@@ -40,7 +46,7 @@ const getHeaderData = async () => {
     return {
         isSignedIn: true as const,
         avatar: avatar,
-        // isAdmin: (user.publicMetadata.isAdmin as boolean | undefined) ?? false,
+        isAdmin: (userInfo?.custom_data?.isAdmin as boolean | undefined) ?? false,
         nextStep,
         isMember: nextStep === null,
     };
