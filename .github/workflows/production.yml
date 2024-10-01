@@ -22,21 +22,18 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Install Docker
+      - name: Install Docker and Colima
         run: |
-          brew update
-          brew install docker
+          brew install docker colima
 
-      - name: Start Docker service
+      - name: Start Colima
         run: |
-          open -a Docker
+          colima start
 
-      - name: Wait for Docker to start
+      - name: Check Docker status
         run: |
-          while ! docker info; do
-            echo "Waiting for Docker to start..."
-            sleep 5
-          done
+          docker --version
+          docker info
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
