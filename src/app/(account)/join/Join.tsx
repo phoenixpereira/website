@@ -2,7 +2,6 @@
 
 import FancyRectangle from '@/components/FancyRectangle';
 import Title from '@/components/Title';
-import { SignedIn, SignedOut, useUser } from '@clerk/nextjs';
 import Link from 'next/link';
 import { useEffect } from 'react';
 import ProgressBar from './ProgressBar';
@@ -16,12 +15,12 @@ export default function Join() {
     const { step, setStep } = useJoinUsStep();
     const { heading } = useJoinUsHeading();
 
-    const { isSignedIn } = useUser();
-    useEffect(() => {
-        if (isSignedIn) {
-            setStep(2);
-        }
-    }, [isSignedIn]);
+    // const { isSignedIn } = useUser();
+    // useEffect(() => {
+    //     if (isSignedIn) {
+    //         setStep(2);
+    //     }
+    // }, [isSignedIn]);
 
     return (
         <main className="flex flex-col items-center gap-8 md:gap-16">
@@ -54,8 +53,9 @@ export default function Join() {
                     <div className="z-0 w-full border-4 border-black bg-white p-8 text-black md:p-12">
                         <h3 className="text-3xl font-bold">{heading.title}</h3>
                         <p className="mb-8 text-xl">{heading.description}</p>
+                        <StepOne />
 
-                        <SignedOut>
+                        {/* <SignedOut>
                             <StepOne />
                         </SignedOut>
                         <SignedIn>
@@ -64,7 +64,7 @@ export default function Join() {
                                 // eslint-disable-next-line react/jsx-key
                                 [<StepTwo />, <StepThree />, <StepFour />][step - 2]
                             }
-                        </SignedIn>
+                        </SignedIn> */}
                     </div>
                 </FancyRectangle>
             </section>

@@ -3,7 +3,7 @@
 import Button from '@/components/Button';
 import ControlledField from '@/components/ControlledField';
 import FancyRectangle from '@/components/FancyRectangle';
-import { useSignIn } from '@clerk/clerk-react';
+import { login } from '@/lib/actions';
 import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -11,7 +11,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { FcGoogle } from 'react-icons/fc';
 import { z } from 'zod';
-import { handleClerkErrors } from '../helpers';
+import { handleAuthErrors } from '../helpers';
 import { emailSchema } from '../schemas';
 
 const signInSchema = z.object({
@@ -20,70 +20,44 @@ const signInSchema = z.object({
 });
 
 export default function SignIn() {
-    const { isLoaded, signIn, setActive } = useSignIn();
-
     const form = useForm<z.infer<typeof signInSchema>>({
         defaultValues: { email: '', password: '' },
         resolver: zodResolver(signInSchema),
     });
 
     const [signInLoading, setSignInLoading] = useState(false);
-
     const router = useRouter();
-    const handleSignIn = form.handleSubmit(async ({ email, password }) => {
-        if (!isLoaded) return;
 
+    const handleSignIn = form.handleSubmit(async (data) => {
         setSignInLoading(true);
 
-        try {
-            const result = await signIn.create({
-                identifier: email,
-                password,
-            });
+        // Create a FormData instance and append the data
+        const formData = new FormData();
+        formData.append('email', data.email);
+        formData.append('password', data.password);
 
-            if (result.status === 'complete') {
-                await setActive({ session: result.createdSessionId });
-                router.push('/');
-                router.refresh();
-            } else {
-                console.log(result);
-            }
-        } catch (error) {
-            handleClerkErrors(error, form, [
-                {
-                    code: 'form_identifier_not_found',
-                    field: 'email',
-                    message: "Can't find your account.",
-                },
-                {
-                    code: 'form_password_incorrect',
-                    field: 'password',
-                    message: 'Password is incorrect. Try again, or use another method.',
-                },
-                {
-                    code: 'strategy_for_user_invalid',
-                    field: 'password',
-                    message:
-                        'Account is not set up for password sign-in. Please sign in with Google.',
-                },
-            ]);
+        // Call the login function from lib/actions
+        const { message, errors } = await login({}, formData);
+
+        // Handle success or errors
+        if (message === 'success') {
+            // Redirect to home or desired page after successful login
+            router.push('/');
+            router.refresh();
+        } else {
+            // Handle validation errors from login function
+            console.log('errors', errors);
+            // handleAuthErrors(new Error(message), form, [
+            //     { code: 'credentials', field: 'email', message: errors.credentials || '' },
+            //     { code: 'unknown', field: 'unknown', message: errors.unknown || '' },
+            // ]);
         }
 
         setSignInLoading(false);
     });
 
     const handleGoogleSignIn = async () => {
-        if (!isLoaded) return;
-        try {
-            await signIn.authenticateWithRedirect({
-                strategy: 'oauth_google',
-                redirectUrl: '/sso-callback',
-                redirectUrlComplete: '/',
-            });
-        } catch (error) {
-            // Handle any errors that might occur during the sign-in process
-            console.error('Google Sign-In Error:', error);
-        }
+        // Placeholder for Google sign-in logic
     };
 
     return (

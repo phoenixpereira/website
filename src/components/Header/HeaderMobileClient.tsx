@@ -1,6 +1,6 @@
 'use client';
 
-import { useClerk } from '@clerk/clerk-react';
+import { logout } from '@/lib/actions';
 import Link from 'next/link';
 import { useState } from 'react';
 import { IoMdClose, IoMdMenu } from 'react-icons/io';
@@ -26,9 +26,8 @@ export default function HeaderMobileClient({
         setIsMenuOpen(false);
     };
 
-    const { signOut } = useClerk();
     const handleSignOut = async () => {
-        await signOut();
+        await logout();
         setIsMenuOpen(false);
     };
 

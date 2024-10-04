@@ -14,15 +14,18 @@ export const memberTable = sqliteTable('members', {
         .$defaultFn(() => nanoid())
         .primaryKey(),
 
-    clerkId: text('clerk_id').notNull().unique(),
-    email: text('email').notNull(),
+    email: text('email').notNull().unique(),
     firstName: text('first_name').notNull(),
     lastName: text('last_name').notNull(),
 
-    studentStatus: text('student_status', { enum: STUDENT_STATUSES }).notNull(),
+    passwordHash: text('password_hash').notNull(),
+    provider: text('provider').default('credentials'),
+    providerId: text('provider_id'),
+
+    studentStatus: text('student_status'),
     studentId: text('student_id'),
-    gender: text('gender', { enum: GENDERS }).notNull(),
-    ageBracket: text('age_bracket', { enum: AGE_BRACKETS }).notNull(),
+    gender: text('gender', { enum: GENDERS }),
+    ageBracket: text('age_bracket', { enum: AGE_BRACKETS }),
     degree: text('degree', { enum: [...DEGREES, ''] }),
     studentType: text('student_type', { enum: [...STUDENT_TYPES, ''] }),
 
@@ -33,6 +36,7 @@ export const memberTable = sqliteTable('members', {
     createdAt: text('created_at')
         .default(sql`CURRENT_TIMESTAMP`)
         .notNull(),
-    // TODO: `updated_at` in sqlite
-    // updatedAt: text('updated_at').default(sql`CURRENT_TIMESTAMP`),
+    updatedAt: text('updated_at')
+        .default(sql`CURRENT_TIMESTAMP`)
+        .notNull(),
 });
