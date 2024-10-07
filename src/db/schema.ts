@@ -22,7 +22,7 @@ export const memberTable = sqliteTable('members', {
     provider: text('provider').default('credentials'),
     providerId: text('provider_id'),
 
-    studentStatus: text('student_status'),
+    studentStatus: text('student_status', { enum: STUDENT_STATUSES }),
     studentId: text('student_id'),
     gender: text('gender', { enum: GENDERS }),
     ageBracket: text('age_bracket', { enum: AGE_BRACKETS }),

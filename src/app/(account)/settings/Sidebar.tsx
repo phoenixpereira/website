@@ -4,9 +4,10 @@ interface SidebarTabProps {
     tabName: TabNames;
     currentTab: TabNames;
     onTabChange: (tab: TabNames) => void;
+    session: any;
 }
 
-function SidebarTab({ tabName, currentTab, onTabChange }: SidebarTabProps) {
+function SidebarTab({ tabName, currentTab, onTabChange, session }: SidebarTabProps) {
     const selected = currentTab === tabName;
     return (
         <button
@@ -26,9 +27,10 @@ interface SidebarProps {
     currentTab: TabNames;
     onTabChange: (tab: TabNames) => void;
     className?: string;
+    session: any;
 }
 
-export default function Sidebar({ currentTab, onTabChange, className }: SidebarProps) {
+export default function Sidebar({ currentTab, onTabChange, className, session }: SidebarProps) {
     return (
         <div
             className={`${className} flex flex-col items-center gap-4 overflow-y-scroll border-2 border-grey p-2 md:items-end md:overflow-visible md:border-y-0 md:border-l-0 md:border-r-2 md:py-0 md:pl-0 md:pr-8`}
@@ -39,6 +41,7 @@ export default function Sidebar({ currentTab, onTabChange, className }: SidebarP
                     onTabChange={onTabChange}
                     tabName={tab}
                     key={i}
+                    session={session}
                 />
             ))}
         </div>

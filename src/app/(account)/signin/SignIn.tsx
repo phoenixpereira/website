@@ -11,7 +11,6 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { FcGoogle } from 'react-icons/fc';
 import { z } from 'zod';
-import { handleAuthErrors } from '../helpers';
 import { emailSchema } from '../schemas';
 
 const signInSchema = z.object({

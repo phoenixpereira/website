@@ -1,30 +1,39 @@
+import { auth } from '@/auth';
 import { db } from '@/db';
 import { memberTable } from '@/db/schema';
-import { currentUser } from '@clerk/nextjs';
-import { createInsertSchema } from 'drizzle-zod';
-import { z } from 'zod';
+import { eq } from 'drizzle-orm';
 
 export async function POST(request: Request) {
     const req = await request.json();
-    const schema = createInsertSchema(memberTable, {
-        clerkId: z.undefined(),
-        email: z.undefined(),
-    });
+    console.log(req);
+    const session = await auth();
 
-    const user = await currentUser();
-    if (!user) {
+    if (!session) {
         return new Response(null, { status: 401 });
     }
 
-    const reqBody = schema.safeParse(req);
-    if (!reqBody.success) {
-        return new Response(JSON.stringify(reqBody.error.format()), { status: 400 });
+    // Destructure the values from req.data
+    const { studentStatus, studentId, ageBracket, gender, degree, studentType } = req;
+
+    // Ensure that the required fields are present before proceeding
+    if (!studentStatus && !studentId && !ageBracket && !gender && !degree && !studentType) {
+        return new Response(JSON.stringify({ error: 'No data provided to update' }), {
+            status: 400,
+        });
     }
 
-    await db.insert(memberTable).values({
-        clerkId: user.id,
-        email: user.emailAddresses[0].emailAddress,
-        ...reqBody.data,
-    });
+    await db
+        .update(memberTable)
+        .set({
+            ...(studentStatus && { studentStatus }),
+            ...(studentId && { studentId }),
+            ...(ageBracket && { ageBracket }),
+            ...(gender && { gender }),
+            ...(degree && { degree }),
+            ...(studentType && { studentType }),
+        })
+        .where(eq(memberTable.id, session.user?.id ?? ''));
+
+    // Return success response
     return Response.json({ success: true });
 }

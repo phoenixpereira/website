@@ -5,8 +5,8 @@ import { cache } from 'react';
 
 export const checkUserExists = cache(async (id: string) => {
     const existingUser = await db
-        .select({ count: memberTable.id })
+        .select({ studentStatus: memberTable.studentStatus })
         .from(memberTable)
         .where(eq(memberTable.id, id));
-    return existingUser.length > 0;
+    return existingUser.length > 0 && existingUser[0].studentStatus !== null;
 });

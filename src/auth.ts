@@ -76,7 +76,7 @@ export const {
             return token;
         },
         async session({ session, token }) {
-            // Add user ID to the session
+            // Add user info to the session
             if (token) {
                 session.user.id = token.id as string;
                 session.user.email = token.email as string;

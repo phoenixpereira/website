@@ -1,5 +1,6 @@
 import Button from '@/components/Button';
 import ControlledField from '@/components/ControlledField';
+import { login } from '@/lib/actions';
 import { fetcher } from '@/lib/fetcher';
 // Import your custom fetcher
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -42,21 +43,27 @@ export default function StepOne() {
                     password: formData.password,
                 },
             });
+            // Create a FormData instance and append the data
+            const signInData = new FormData();
+            signInData.append('email', formData.email);
+            signInData.append('password', formData.password);
 
-            // Sign in the user automatically after successful registration
-            const signInResult = await signIn('credentials', {
-                redirect: false, // Prevent automatic redirection
-                email: formData.email,
-                password: formData.password,
-            });
+            // Call the login function from lib/actions
+            const { message, errors } = await login({}, signInData);
 
-            // Check if the sign-in was successful
-            if (signInResult?.error) {
-                throw new Error(signInResult.error);
+            // Handle success or errors
+            if (message === 'success') {
+                // Continue sign up
+                router.push('/join');
+                router.refresh();
+            } else {
+                // Handle validation errors from login function
+                console.log('errors', errors);
+                // handleAuthErrors(new Error(message), form, [
+                //     { code: 'credentials', field: 'email', message: errors.credentials || '' },
+                //     { code: 'unknown', field: 'unknown', message: errors.unknown || '' },
+                // ]);
             }
-
-            // If successful, redirect to dashboard or another page
-            router.push('/join');
         } catch (error) {
             console.error('Error during sign up:', error);
             setErrorMessage(error.message || 'Something went wrong.');

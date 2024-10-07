@@ -1,3 +1,3 @@
-export const ROOT = '/signin';
+export const ROOT = '/';
 export const PRIVATE_ROUTES = ['/settings', '/admin'];
-export const DEFAULT_REDIRECT = '/signin';
+export const DEFAULT_REDIRECT = '/';

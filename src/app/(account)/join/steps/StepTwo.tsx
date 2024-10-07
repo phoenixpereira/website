@@ -1,7 +1,6 @@
 import Button from '@/components/Button';
 import ControlledField from '@/components/ControlledField';
 import { STUDENT_STATUSES } from '@/constants/student-info';
-import { useUser } from '@clerk/clerk-react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
@@ -10,8 +9,6 @@ import { firstNameSchema, lastNameSchema } from '../../schemas';
 import { useJoinUsStep, useJoinUsStudentInfo, useSetJoinUsHeading } from '../store';
 
 export const stepTwoSchema = z.object({
-    firstName: firstNameSchema,
-    lastName: lastNameSchema,
     studentStatus: z.enum(STUDENT_STATUSES, {
         errorMap: () => ({ message: 'Please select a valid status' }),
     }),
@@ -43,13 +40,6 @@ export default function StepTwo() {
         resolver: zodResolver(validationSchema),
     });
 
-    const { user } = useUser();
-    useEffect(() => {
-        if (!user) return;
-        form.setValue('firstName', String(user.firstName));
-        form.setValue('lastName', String(user.lastName));
-    }, [user]);
-
     const { nextStep } = useJoinUsStep();
     const handleContinue = form.handleSubmit((formData) => {
         setStepTwoData(formData);
@@ -58,8 +48,6 @@ export default function StepTwo() {
 
     return (
         <form onSubmit={handleContinue}>
-            <ControlledField label="First Name" control={form.control} name="firstName" />
-            <ControlledField label="Last Name" control={form.control} name="lastName" />
             <ControlledField
                 label="Are you a university student?"
                 control={form.control}

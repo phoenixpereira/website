@@ -9,7 +9,7 @@ import MembershipSettings from './tabs/MembershipSettings';
 export const TAB_NAMES = ['Account', 'Personal Info', 'Membership', 'Notifications'] as const;
 export type TabNames = (typeof TAB_NAMES)[number];
 
-export type SettingData = { membershipPayment: MembershipPayment };
+export type SettingData = { membershipPayment: MembershipPayment; session: any };
 export type SettingTabProps = { settingData: SettingData };
 type SettingTabComponent = ({ settingData }: SettingTabProps) => React.ReactNode;
 const SETTING_TABS = {
@@ -33,6 +33,7 @@ export default function Settings({ settingData }: { settingData: SettingData }) 
                     setTab(tab);
                     refresh();
                 }}
+                session={settingData.session}
             />
             <div className="w-full">
                 <Tab settingData={settingData} />

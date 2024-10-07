@@ -13,7 +13,6 @@ const getHeaderData = async (req: Request) => {
     };
 
     const session = await auth();
-    console.log(session);
 
     if (!session) {
         return { isSignedIn: false as const };
@@ -23,8 +22,10 @@ const getHeaderData = async (req: Request) => {
 
     // Using the email from the token to check user existence
     const exists = await checkUserExists(session.user?.id as string);
+
     if (exists) {
         const membershipPayment = await verifyMembershipPayment(session.user?.id as string);
+        console.log(membershipPayment);
         if (!membershipPayment.paid) {
             nextStep = 'payment';
         }
