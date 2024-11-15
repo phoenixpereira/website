@@ -1,14 +1,15 @@
-import { currentUser } from '@clerk/nextjs';
-import type { Metadata } from 'next';
+'use client';
+
+import { useUser } from '@stackframe/stack';
 import { redirect } from 'next/navigation';
 import SignIn from './SignIn';
 
-export const metadata: Metadata = {
-    title: 'Sign In',
-};
+export default function SignInPage() {
+    const user = useUser();
 
-export default async function SignInPage() {
-    const user = await currentUser();
-    if (user) redirect('/settings');
+    if (user) {
+        redirect('/settings');
+    }
+
     return <SignIn />;
 }

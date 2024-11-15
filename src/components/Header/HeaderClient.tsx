@@ -1,18 +1,23 @@
 'use client';
 
-import { useClerk } from '@clerk/clerk-react';
 import { Transition } from '@headlessui/react';
+import { useUser } from '@stackframe/stack';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useRef, useState } from 'react';
 import { useOnClickOutside } from 'usehooks-ts';
-import type { HeaderData } from '.';
 import Button from '../Button';
 import FancyRectangle from '../FancyRectangle';
 import { Links, MenuLinks } from './components/Links';
 import LogoTitle from './components/LogoTitle';
 import ScrollShader from './components/ScrollShader';
 import { SignInJoin } from './components/SignInJoin';
+
+type HeaderData = {
+    isSignedIn: boolean;
+    nextStep?: 'signup' | 'payment' | null;
+    avatar?: string;
+};
 
 function UserButton({ data }: { data: HeaderData }) {
     const [isMenuOpen, setMenuOpen] = useState(false);
@@ -25,10 +30,10 @@ function UserButton({ data }: { data: HeaderData }) {
         setMenuOpen(!isMenuOpen);
     };
 
-    const { signOut } = useClerk();
+    const user = useUser();
     const router = useRouter();
     const handleSignOut = async () => {
-        await signOut();
+        user?.signOut();
         router.push('/');
         router.refresh();
     };

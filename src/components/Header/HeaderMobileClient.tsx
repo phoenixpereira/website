@@ -1,15 +1,20 @@
 'use client';
 
-import { useClerk } from '@clerk/clerk-react';
+import { useUser } from '@stackframe/stack';
 import Link from 'next/link';
 import { useState } from 'react';
 import { IoMdClose, IoMdMenu } from 'react-icons/io';
-import type { HeaderData } from '.';
 import FancyRectangle from '../FancyRectangle';
 import { Links, MenuLinks } from './components/Links';
 import LogoTitle from './components/LogoTitle';
 import ScrollShader from './components/ScrollShader';
 import { SignInJoinMobile } from './components/SignInJoin';
+
+type HeaderData = {
+    isSignedIn: boolean;
+    nextStep?: 'signup' | 'payment' | null;
+    avatar?: string;
+};
 
 export default function HeaderMobileClient({
     data,
@@ -18,6 +23,7 @@ export default function HeaderMobileClient({
     data: HeaderData;
     className?: string;
 }) {
+    const user = useUser();
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const toggleMenu = () => {
         setIsMenuOpen(!isMenuOpen);
@@ -26,9 +32,8 @@ export default function HeaderMobileClient({
         setIsMenuOpen(false);
     };
 
-    const { signOut } = useClerk();
     const handleSignOut = async () => {
-        await signOut();
+        user?.signOut();
         setIsMenuOpen(false);
     };
 

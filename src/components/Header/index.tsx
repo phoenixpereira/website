@@ -1,38 +1,43 @@
-import { checkUserExists } from '@/server/check-user-exists';
-import { verifyMembershipPayment } from '@/server/verify-membership-payment';
-import { currentUser } from '@clerk/nextjs';
-import HeaderClient from './HeaderClient';
-import HeaderMobileClient from './HeaderMobileClient';
+'use client';
 
-const getHeaderData = async () => {
-    const user = await currentUser();
-    if (!user) {
-        return { isSignedIn: false as const };
-    }
+import dynamic from 'next/dynamic';
+import { useState, useEffect } from 'react';
 
-    let nextStep: 'signup' | 'payment' | null = null;
-    const exists = await checkUserExists(user.id);
-    if (exists) {
-        const membershipPayment = await verifyMembershipPayment(user.id);
-        if (!membershipPayment.paid) {
-            nextStep = 'payment';
-        }
-    } else {
-        nextStep = 'signup';
-    }
+// Dynamically import header components
+const HeaderClient = dynamic(() => import('./HeaderClient'), { ssr: true });
+const HeaderMobileClient = dynamic(() => import('./HeaderMobileClient'), { ssr: true });
 
-    return {
-        isSignedIn: true as const,
-        avatar: user.imageUrl,
-        isAdmin: (user.publicMetadata.isAdmin as boolean | undefined) ?? false,
-        nextStep,
-        isMember: nextStep === null,
-    };
+// Type definition for header data
+export type HeaderData = {
+    isSignedIn: boolean;
+    nextStep: 'signup' | 'payment' | null;
+    isMember: boolean;
 };
-export type HeaderData = Awaited<ReturnType<typeof getHeaderData>>;
 
-export default async function Header() {
-    const headerData = await getHeaderData();
+// Function to fetch header data
+const fetchHeaderData = async (): Promise<HeaderData> => {
+    const res = await fetch('/api/headerData');
+    if (!res.ok) {
+        return { isSignedIn: false, nextStep: null, isMember: false };
+    }
+    return res.json();
+};
+
+export default function Header() {
+    const [headerData, setHeaderData] = useState<HeaderData>({
+        isSignedIn: false,
+        nextStep: null,
+        isMember: false,
+    });
+
+    // Fetch the header data on client-side mount
+    useEffect(() => {
+        const fetchData = async () => {
+            const data = await fetchHeaderData();
+            setHeaderData(data);
+        };
+        fetchData();
+    }, []);
 
     return (
         <>

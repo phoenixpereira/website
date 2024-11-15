@@ -3,9 +3,11 @@ import Header from '@/components/Header';
 import { env } from '@/env.mjs';
 import '@/styles/globals.css';
 import { ClerkProvider } from '@clerk/nextjs';
+import { StackProvider, StackTheme } from '@stackframe/stack';
 import type { Metadata, Viewport } from 'next';
 import { Archivo } from 'next/font/google';
 import Script from 'next/script';
+import { stackServerApp } from '../stack';
 
 export const metadata: Metadata = {
     icons: '/favicon.ico',
@@ -55,11 +57,15 @@ export default function RootLayout({ children }: RootLayoutProps) {
                     data-website-id={env.NEXT_PUBLIC_UMAMI_WEBSITE_ID}
                 />
                 <body className="overflow-x-hidden bg-grey text-white">
-                    <Header />
-                    <div className="mx-auto min-h-screen w-responsive pb-6 pt-32 md:pt-40">
-                        {children}
-                    </div>
-                    <Footer />
+                    <StackProvider app={stackServerApp}>
+                        <StackTheme>
+                            <Header />
+                            <div className="mx-auto min-h-screen w-responsive pb-6 pt-32 md:pt-40">
+                                {children}
+                            </div>
+                            <Footer />
+                        </StackTheme>
+                    </StackProvider>
                 </body>
             </html>
         </ClerkProvider>

@@ -2,6 +2,7 @@ import Button from '@/components/Button';
 import ControlledField from '@/components/ControlledField';
 import { useSignUp } from '@clerk/nextjs';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useStackApp } from '@stackframe/stack';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -90,6 +91,8 @@ const stepOneSchema = z.object({
 });
 
 export default function StepOne() {
+    const app = useStackApp();
+
     useSetJoinUsHeading({
         title: 'Join Us',
         description: 'Create your account',
@@ -143,11 +146,7 @@ export default function StepOne() {
     const handleGoogleSignUp = async () => {
         if (!isLoaded) return;
         try {
-            await signUp.authenticateWithRedirect({
-                strategy: 'oauth_google',
-                redirectUrl: '/sso-callback',
-                redirectUrlComplete: '/join',
-            });
+            await app.signInWithOAuth('google');
         } catch (error) {
             // Handle any errors that might occur during the sign-up process
             console.error('Google Sign-Up Error:', error);
