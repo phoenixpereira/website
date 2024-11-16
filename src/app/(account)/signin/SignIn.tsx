@@ -5,6 +5,7 @@ import ControlledField from '@/components/ControlledField';
 import FancyRectangle from '@/components/FancyRectangle';
 import { useSignIn } from '@clerk/clerk-react';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useStackApp } from '@stackframe/stack';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -20,6 +21,8 @@ const signInSchema = z.object({
 });
 
 export default function SignIn() {
+    const app = useStackApp();
+
     const { isLoaded, signIn, setActive } = useSignIn();
 
     const form = useForm<z.infer<typeof signInSchema>>({
@@ -75,11 +78,7 @@ export default function SignIn() {
     const handleGoogleSignIn = async () => {
         if (!isLoaded) return;
         try {
-            await signIn.authenticateWithRedirect({
-                strategy: 'oauth_google',
-                redirectUrl: '/sso-callback',
-                redirectUrlComplete: '/',
-            });
+            await app.signInWithOAuth('google');
         } catch (error) {
             // Handle any errors that might occur during the sign-in process
             console.error('Google Sign-In Error:', error);
