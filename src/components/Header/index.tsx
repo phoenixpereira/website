@@ -21,6 +21,7 @@ async function getHeaderData() {
             nextStep: null,
             isMember: false,
             avatar: '',
+            isAdmin: false,
         };
 
         const user = await stackServerApp.getUser();
@@ -46,6 +47,7 @@ async function getHeaderData() {
             nextStep,
             isMember: nextStep === null,
             avatar,
+            isAdmin: user.clientMetadata.isAdmin,
         };
     } catch (error) {
         console.error('Error fetching header data:', error);
@@ -54,6 +56,7 @@ async function getHeaderData() {
             nextStep: null,
             isMember: false,
             avatar: '',
+            isAdmin: false,
         };
     }
 }

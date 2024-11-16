@@ -95,7 +95,7 @@ export async function PUT(request: Request) {
     });
 
     const user = await stackServerApp.getUser();
-    if (!user?.publicMetadata.isAdmin) {
+    if (!user?.clientMetadata.isAdmin) {
         return new Response(null, { status: 401 });
     }
 
