@@ -1,7 +1,7 @@
 import Button from '@/components/Button';
 import { fetcher } from '@/lib/fetcher';
 import { formatDate } from '@/utils/format-date';
-import { useUser } from '@clerk/clerk-react';
+import { useUser } from '@stackframe/stack';
 import Link from 'next/link';
 import type { PaymentLink } from 'square';
 import useSWRMutation from 'swr/mutation';
@@ -10,7 +10,7 @@ import type { SettingTabProps } from '../Settings';
 export default function MembershipSettings({
     settingData: { membershipPayment: payment },
 }: SettingTabProps) {
-    const { user } = useUser();
+    const user = useUser();
 
     const pay = useSWRMutation('payment', fetcher.post.mutate, {
         onSuccess: async (data: PaymentLink) => {

@@ -11,7 +11,7 @@ import { env } from '@/env.mjs';
 import { redisClient } from '@/lib/redis';
 import { squareClient } from '@/lib/square';
 import { updateMemberExpiryDate } from '@/server/update-member-expiry-date';
-import { currentUser } from '@clerk/nextjs';
+import { stackServerApp } from '@/stack';
 import { eq } from 'drizzle-orm';
 import type { CreatePaymentLinkRequest } from 'square';
 import { ApiError } from 'square';
@@ -28,7 +28,7 @@ export async function POST(request: Request) {
     });
 
     // Ensure user is logged in
-    const user = await currentUser();
+    const user = await stackServerApp.getUser();
     if (!user) {
         return new Response(null, { status: 401 });
     }
@@ -70,7 +70,7 @@ export async function POST(request: Request) {
         const resp = await squareClient.checkoutApi.createPaymentLink(body);
 
         if (reqBody.data.product === 'membership') {
-            // Add Clerk ID and payment ID to Redis cache
+            // Add Stack Auth ID and payment ID to Redis cache
             const orderId = resp.result.paymentLink?.orderId ?? '';
             const createdAt = resp.result.paymentLink?.createdAt ?? '';
             await redisClient.hSet(`payment:membership:${user.id}`, { orderId, createdAt });
@@ -94,7 +94,7 @@ export async function PUT(request: Request) {
         paid: z.boolean(),
     });
 
-    const user = await currentUser();
+    const user = await stackServerApp.getUser();
     if (!user?.publicMetadata.isAdmin) {
         return new Response(null, { status: 401 });
     }
