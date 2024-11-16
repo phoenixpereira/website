@@ -1,9 +1,7 @@
 import Button from '@/components/Button';
 import ControlledField from '@/components/ControlledField';
 import { STUDENT_STATUSES } from '@/constants/student-info';
-import { useUser } from '@clerk/clerk-react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { firstNameSchema, lastNameSchema } from '../../schemas';
@@ -42,13 +40,6 @@ export default function StepTwo() {
         defaultValues: stepTwoData,
         resolver: zodResolver(validationSchema),
     });
-
-    const { user } = useUser();
-    useEffect(() => {
-        if (!user) return;
-        form.setValue('firstName', String(user.firstName));
-        form.setValue('lastName', String(user.lastName));
-    }, [user]);
 
     const { nextStep } = useJoinUsStep();
     const handleContinue = form.handleSubmit((formData) => {

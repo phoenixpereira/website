@@ -14,7 +14,7 @@ export const memberTable = sqliteTable('members', {
         .$defaultFn(() => nanoid())
         .primaryKey(),
 
-    clerkId: text('clerk_id').notNull().unique(),
+    stackAuthId: text('stack_auth_id').notNull().unique(),
     email: text('email').notNull(),
     firstName: text('first_name').notNull(),
     lastName: text('last_name').notNull(),
