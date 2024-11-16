@@ -1,48 +1,65 @@
-'use client';
-
+import { checkUserExists } from '@/server/check-user-exists';
+import { verifyMembershipPayment } from '@/server/verify-membership-payment';
+import { stackServerApp } from '@/stack';
+import md5 from 'md5';
 import dynamic from 'next/dynamic';
-import { useState, useEffect } from 'react';
 
-// Dynamically import header components
-const HeaderClient = dynamic(() => import('./HeaderClient'), { ssr: true });
-const HeaderMobileClient = dynamic(() => import('./HeaderMobileClient'), { ssr: true });
+const Header = dynamic(() => import('./Header'), { ssr: true });
 
-// Type definition for header data
-export type HeaderData = {
-    isSignedIn: boolean;
-    nextStep: 'signup' | 'payment' | null;
-    isMember: boolean;
+// Get the Gravatar URL based on user's email
+const getGravatarUrl = (email: string) => {
+    const gravatarHash = md5(email.trim().toLowerCase());
+    return `https://www.gravatar.com/avatar/${gravatarHash}?d=identicon`;
 };
 
-// Function to fetch header data
-const fetchHeaderData = async (): Promise<HeaderData> => {
-    const res = await fetch('/api/headerData');
-    if (!res.ok) {
-        return { isSignedIn: false, nextStep: null, isMember: false };
-    }
-    return res.json();
-};
-
-export default function Header() {
-    const [headerData, setHeaderData] = useState<HeaderData>({
-        isSignedIn: false,
-        nextStep: null,
-        isMember: false,
-    });
-
-    // Fetch the header data on client-side mount
-    useEffect(() => {
-        const fetchData = async () => {
-            const data = await fetchHeaderData();
-            setHeaderData(data);
+// Fetch user and header data
+async function getHeaderData() {
+    try {
+        // Default data (fallback)
+        const defaultData = {
+            isSignedIn: false,
+            nextStep: null,
+            isMember: false,
+            avatar: '',
         };
-        fetchData();
-    }, []);
 
-    return (
-        <>
-            <HeaderClient data={headerData} className="hidden lg-xl:block" />
-            <HeaderMobileClient data={headerData} className="lg-xl:hidden" />
-        </>
-    );
+        const user = await stackServerApp.getUser();
+        if (!user) {
+            return defaultData;
+        }
+
+        let nextStep: 'signup' | 'payment' | null = null;
+        const exists = await checkUserExists(user.id);
+        if (exists) {
+            const membershipPayment = await verifyMembershipPayment(user.id);
+            if (!membershipPayment.paid) {
+                nextStep = 'payment';
+            }
+        } else {
+            nextStep = 'signup';
+        }
+
+        const avatar = getGravatarUrl(user.primaryEmail);
+
+        return {
+            isSignedIn: true,
+            nextStep,
+            isMember: nextStep === null,
+            avatar,
+        };
+    } catch (error) {
+        console.error('Error fetching header data:', error);
+        return {
+            isSignedIn: false,
+            nextStep: null,
+            isMember: false,
+            avatar: '',
+        };
+    }
+}
+
+// Render Header
+export default async function RenderHeader() {
+    const headerData = await getHeaderData();
+    return <Header serverData={headerData} />;
 }
